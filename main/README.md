@@ -72,3 +72,38 @@ jawab:
 Menurut saya tutorial 2 lebih mudah untuk dipahami sekaligus diimplementasikan, karena dirancang agar kami ikut aktif menuliskan kode secara langsung, contohnya saat membuat fungsi baru JSON dan XML. Selain itu, asdos juga cukup membantu saya ketika mengalami kendala dalam mengerjakan tutorial sehingga proses belajar terasa lebih lancar.
 
 bukti screenshot ada di dalam folder images
+
+====== TUGAS INDIVIDU 4 ======
+1) Apa itu Django AuthenticationForm? Jelaskan juga kelebihan dan kekurangannya.
+jawab:
+AuthenticationForm adalah form bawaan Django yang disediakan oleh modul django.contrib.auth.forms. Form ini digunakan untuk autentikasi pengguna (login) dengan cara memverifikasi username dan password terhadap data yang ada di database.
+Secara default, AuthenticationForm berisi dua field utama, yaitu username dan password.
+Saat dipanggil di view, form ini akan memvalidasi input (apakah user ada, apakah password benar), lalu menghasilkan objek User jika autentikasi berhasil, atau menyediakan error message jika login gagal. 
+kelebihannya kita tidak perlu membuat form login dari nol, karena sudah built-indan siap pakai (sudah ada validasi dasar juga). selain itu ini juga sudah terintegrasi dengan sistem auth django, jadi langsung terhubung dengan backend autentikasi Django. namun disisi lain, form ini memiliki keterbatasan pada field yang digunakan (secara default hanya mendukung login dengan username). selain itu tampilannya juga sederhana, sehingga perlu CSS/Bootstrap/dsb untuk settingan tampilan yang lebih advanced.
+
+2) Apa perbedaan antara autentikasi dan otorisasi? Bagaimana Django mengimplementasikan kedua konsep tersebut?
+jawab:
+Autentikasi dan otorisasi adalah dua konsep yang berbeda namun saling melengkapi dalam keamanan aplikasi. Autentikasi adalah proses memverifikasi identitas pengguna, misalnya melalui username dan password, atau metode lain seperti login via Google. Sementara itu, otorisasi adalah proses menentukan apa yang boleh dilakukan oleh pengguna setelah identitasnya terverifikasi, misalnya apakah seorang pengguna hanya bisa membaca data atau juga dapat menghapusnya.
+Django mengimplementasikan autentikasi melalui sistem bawaan django.contrib.auth, yang menyediakan form, view, dan fungsi seperti authenticate(), login(), dan logout() untuk menangani login serta manajemen sesi pengguna. Untuk otorisasi, Django menyediakan sistem permission dan group, di mana setiap model otomatis memiliki izin dasar (add, change, delete, view) dan developer dapat menambahkan izin khusus sesuai kebutuhan. terdapat juga decorator seperti @login_required untuk memastikan hanya pengguna yang sudah login yang bisa mengakses halaman tersebut.  
+
+3) Apa saja kelebihan dan kekurangan session dan cookies dalam konteks menyimpan state di aplikasi web?
+jawab: 
+a) session:
+menyimpan data di sisi server sementara browser hanya menyimpan session ID, biasanya melalui cookie bernama sessionid. Hal ini membuat sessions lebih aman, fleksibel dalam menyimpan data berukuran besar, dan mudah dikontrol oleh server, misalnya untuk mengatur masa berlaku atau memaksa logout. Kekurangannya, sessions membebani server karena harus mengelola banyak data user secara bersamaan, serta tetap membutuhkan cookie atau mekanisme lain untuk menghubungkan request dengan session yang benar.
+b) cookies:
+disimpan di sisi client (browser) sehingga sederhana digunakan, dapat bertahan meskipun browser ditutup, dan bisa diakses langsung oleh JavaScript, sehingga cocok untuk menyimpan preferensi ringan seperti bahasa atau tema. Namun, cookies memiliki ukuran terbatas, selalu terkirim di setiap request sehingga menambah beban jaringan, serta lebih rentan terhadap manipulasi atau pencurian data jika tidak diamankan.
+
+4) Apakah penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai? Bagaimana Django menangani hal tersebut?
+jawab:
+secara default tidak sepenuhnya aman. Cookies bisa dicuri lewat serangan XSS (Cross-Site Scripting) jika attacker berhasil menyisipkan script berbahaya yang membaca cookie. Selain itu, cookies dapat dimanipulasi pengguna karena tersimpan di sisi client, sehingga data sensitif tidak boleh langsung disimpan di dalamnya. Risiko lain adalah session hijacking atau pencurian cookie session melalui serangan MITM (Man-in-the-Middle) jika cookie dikirim lewat koneksi yang tidak dienkripsi.
+Untuk mengurangi risiko ini, Django menerapkan beberapa mekanisme pengamanan pada cookies secara default. Misalnya, Django menyimpan data sensitif (seperti informasi login) di server-side session, bukan di cookie langsung — cookie hanya berisi session ID acak. Django juga menyediakan opsi konfigurasi keamanan, seperti SESSION_COOKIE_HTTPONLY=True (mencegah akses JavaScript ke cookie), SESSION_COOKIE_SECURE=True (cookie hanya dikirim melalui HTTPS), dan SESSION_COOKIE_SAMESITE='Lax' atau 'Strict' (mencegah pengiriman cookie lintas situs yang bisa dimanfaatkan dalam serangan CSRF). 
+
+5) Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+jawab:
+Seperti biasa, saya membuka terminal pada direktori proyek dan mengaktifkan virtual environment. Setelah itu, saya mulai mengimplementasikan fungsi registrasi, login, dan logout agar pengguna dapat mengakses aplikasi sesuai dengan status autentikasinya. Pada file views.py, saya menambahkan fungsi register menggunakan UserCreationForm untuk membuat akun baru. Kemudian saya menambahkan fungsi login_user menggunakan AuthenticationForm untuk memvalidasi kredensial pengguna dan menyimpan sesi login, termasuk menyimpan cookie last_login untuk mencatat waktu login terakhir. Fungsi logout_user juga saya buat untuk menghapus sesi dan cookie tersebut, sehingga pengguna harus login kembali untuk mengakses halaman utama.
+Setelah mekanisme autentikasi selesai, saya membuat dua akun pengguna berbeda pada lokal. Masing-masing akun saya gunakan untuk membuat tiga dummy data melalui model yang sudah ada, sehingga total terdapat enam data yang terdistribusi berdasarkan pemilik akun.
+Agar setiap data terhubung dengan pemiliknya, saya menghubungkan model Product dengan model User menggunakan ForeignKey. Dengan demikian, setiap product hanya bisa dimiliki oleh satu user, dan halaman utama hanya menampilkan data sesuai dengan akun yang sedang login.
+Pada halaman utama, saya juga menambahkan informasi detail pengguna yang sedang login, seperti username, dan menampilkan cookie last_login yang tersimpan sebelumnya. Hal ini memastikan pengguna dapat melihat kapan terakhir kali mereka login, sekaligus membuat pengalaman pengguna lebih personal.
+Setelah semua fitur berjalan dengan baik, saya menyimpan perubahan menggunakan Git (git add, git commit) lalu melakukan push ke GitHub dan PWS.
+
+Bukti akun pengguna dan dummy data masing2 ada di dalam folder images.

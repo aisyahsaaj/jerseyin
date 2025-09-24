@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.contrib.auth.models import User
 
 class Product(models.Model):
     SIZE_CHOICES = [
@@ -9,6 +10,7 @@ class Product(models.Model):
         ('XL', 'Extra Large'),
     ]
 
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255)            # nama jersey
     content = models.TextField()                        # deskripsi jersey
@@ -31,4 +33,3 @@ class Product(models.Model):
     def increment_views(self):
         self.product_views += 1
         self.save()
-
