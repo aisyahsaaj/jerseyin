@@ -107,3 +107,83 @@ Pada halaman utama, saya juga menambahkan informasi detail pengguna yang sedang 
 Setelah semua fitur berjalan dengan baik, saya menyimpan perubahan menggunakan Git (git add, git commit) lalu melakukan push ke GitHub dan PWS.
 
 Bukti akun pengguna dan dummy data masing2 ada di dalam folder images.
+
+
+====== TUGAS INDIVIDU 5 ======
+1) Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!
+jawab: 
+a) Pertama, deklarasi dengan !important memiliki prioritas absolut tertinggi dan akan mengalahkan semua selector lainnya tanpa memandang specificity.
+
+b) Kedua, inline styles yang ditulis langsung pada atribut style elemen HTML, kecuali jika ada deklarasi !important yang lebih spesifik.
+
+c) Ketiga, ID selector dimana selector dengan ID (#id) memiliki bobot lebih tinggi daripada class dan element selector.
+
+d) Keempat, class selector, attribute selector, dan pseudo-class selector seperti .class, [type="text"], :hover, dan :focus.
+
+e) Kelima, element selector dan pseudo-element selector seperti div, p, ::before, dan ::after.
+
+f) Terakhir, universal selector dan nilai warisan (inheritance) memiliki prioritas terendah dalam hierarki CSS.
+
+Aturan tambahan: Jika dua selector memiliki tingkat specificity yang sama, maka aturan cascade berlaku dimana deklarasi CSS yang ditulis terakhir dalam stylesheet akan diprioritaskan.
+
+2) Mengapa responsive design menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan responsive design, serta jelaskan mengapa!
+jawab: 
+Responsive design menjadi konsep penting dalam pengembangan web karena:
+• Fragmentasi perangkat yang masif dengan berbagai ukuran layar, dari smartphone 5 inchi hingga desktop 27 inchi, mengharuskan website dapat beradaptasi secara optimal.
+• Pengalaman pengguna yang konsisten across devices menjadi standar ekspektasi pengguna modern, dimana 50% lebih traffic web global kini berasal dari perangkat mobile.
+• Faktor SEO dimana Google menerapkan mobile-first indexing dan memberikan ranking lebih tinggi pada website yang mobile-friendly.
+• Biaya maintenance lebih efisien karena hanya perlu mengelola satu codebase untuk semua perangkat dibandingkan membuat website terpisah untuk desktop dan mobile.
+
+Contoh Aplikasi yang Sudah Menerapkan Responsive Design:
+
+• Shopee berhasil mengadaptasi layout, ukuran elemen, dan navigasinya secara seamless dari desktop ke mobile. Produk images, tombol, dan text scales proportionally, memberikan experience yang konsisten dan mudah digunakan di semua device.
+• Kompas.com menerapkan fluid grid system dimana konten berubah dari multi-kolom pada desktop menjadi single-column pada mobile, dengan hamburger menu yang menggantikan navigation bar panjang.
+
+Contoh Aplikasi yang Belum Optimal Responsive Design:
+
+• Beberapa website pemerintah masih menggunakan fixed-width layout yang menyebabkan horizontal scrolling pada mobile, tombol terlalu kecil untuk di-tap, dan text yang tidak readable tanpa zoom.
+• Website legacy banking tertentu masih mempertahankan table-based layout yang tidak fleksibel, menyebabkan users harus terus-menerus zoom dan scroll untuk membaca konten atau mengisi form.
+
+3) Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!
+jawab: 
+a) Margin
+area transparan di luar border yang membuat jarak antara elemen dengan elemen lain di sekitarnya. Margin bersifat transparan dan tidak mewarisi background color.
+implementasi :
+  margin: 30px;                    /* semua sisi */
+  margin: 15px 30px;              /* vertikal horizontal */
+  margin: 10px 20px 30px 40px;    /* top right bottom left */
+  margin: 0 auto;                 /* center horizontal */
+
+b) border
+garis batas yang berada antara margin dan padding, berfungsi sebagai pembatas visual elemen. Border dapat diatur ketebalan, style, dan warnanya.
+implementasi :
+  border: 2px solid #000;          /* width style color */
+  border-width: 1px 2px;
+  border-style: solid dashed;
+  border-color: red blue;
+  border-radius: 10px;             /* sudut melengkung */
+  
+c) padding 
+area transparan di dalam border yang membuat jarak antara konten elemen dengan border-nya. Padding mewarisi background color dari elemen induk.
+Implementasi:
+  padding: 20px;                    /* semua sisi */
+  padding: 10px 20px;              /* vertikal horizontal */
+  padding: 5px 10px 15px 20px;     /* top right bottom left */
+
+4) Jelaskan konsep flex box dan grid layout beserta kegunaannya!
+jawab: 
+a) Flexbox adalah sistem layout satu dimensi yang mengatur elemen dalam satu arah saja - baik secara horizontal (dalam baris) maupun vertikal (dalam kolom). Flexbox sangat ideal untuk mengatur komponen-komponen antarmuka yang lebih kecil seperti menu navigasi, gallery gambar, atau form controls karena kemampuannya dalam mendistribusikan ruang secara fleksibel dan menengahkan konten dengan mudah.
+
+b) Grid Layout adalah sistem layout dua dimensi yang mengatur elemen secara simultan dalam baris dan kolom. Grid cocok untuk membangun layout halaman yang kompleks seperti template website lengkap dengan header, sidebar, konten utama, dan footer. Keunggulan Grid terletak pada kemampuannya membuat struktur layout yang terdefinisi dengan jelas dan presisi.
+
+5) Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+jawab: 
+Pertama, saya masuk ke terminal lalu berpindah ke direktori project dan mengaktifkan virtual environment supaya semua dependency berjalan dalam ruang terkontrol. Setelah itu, saya menambahkan script CDN Tailwind ke dalam file base.html agar bisa langsung menggunakan utility class tanpa perlu build tambahan. Saya juga meletakkan link stylesheet global.css setelah CDN Tailwind supaya styling kustom dapat meng-override bawaan Tailwind.
+
+Untuk fitur edit dan delete product, saya membuat fungsi edit_product dan delete_product di views.py, kemudian menautkannya dengan URL pattern di urls.py. Selanjutnya saya menambahkan file HTML baru untuk halaman edit serta konfirmasi delete, dan memunculkan tombol Edit dan Delete di daftar produk (main.html). Tombol ini hanya terlihat ketika pengguna login sebagai pemilik produk, sehingga keamanan tetap terjaga.
+
+Untuk navbar, saya membuat file navbar.html di folder templates, mengisinya dengan struktur HTML yang memuat link navigasi seperti Home, Login, dan Logout, lalu menyertakan file tersebut di base.html menggunakan {% include 'navbar.html' %}. Dengan begitu, navbar otomatis muncul di setiap halaman yang mewarisi base.html.
+
+Konfigurasi static files saya lakukan dengan menambahkan middleware WhiteNoise di settings.py setelah SecurityMiddleware, lalu mengatur STATIC_URL, STATICFILES_DIRS, dan STATIC_ROOT. Hal ini penting supaya file CSS dan aset lain bisa diakses dengan benar baik saat development maupun production.
+
+Untuk kostumisasi UI, saya membuat folder static/css dan file global.css di dalamnya. Isi file tersebut berupa aturan styling tambahan, misalnya untuk form input, checkbox, border, dan typography, menggunakan warna biru sporty (#2563eb) agar konsisten dengan tema sepak bola. Styling ini saya terapkan di beberapa halaman seperti login.html, register.html, navbar.html, card_product.html, product_detail.html, create_product.html, dan edit_product.html. Dengan cara ini tampilan seluruh aplikasi menjadi lebih rapi, modern, dan selaras dengan nuansa jersey/football.
