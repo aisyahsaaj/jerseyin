@@ -187,3 +187,20 @@ Untuk navbar, saya membuat file navbar.html di folder templates, mengisinya deng
 Konfigurasi static files saya lakukan dengan menambahkan middleware WhiteNoise di settings.py setelah SecurityMiddleware, lalu mengatur STATIC_URL, STATICFILES_DIRS, dan STATIC_ROOT. Hal ini penting supaya file CSS dan aset lain bisa diakses dengan benar baik saat development maupun production.
 
 Untuk kostumisasi UI, saya membuat folder static/css dan file global.css di dalamnya. Isi file tersebut berupa aturan styling tambahan, misalnya untuk form input, checkbox, border, dan typography, menggunakan warna biru sporty (#2563eb) agar konsisten dengan tema sepak bola. Styling ini saya terapkan di beberapa halaman seperti login.html, register.html, navbar.html, card_product.html, product_detail.html, create_product.html, dan edit_product.html. Dengan cara ini tampilan seluruh aplikasi menjadi lebih rapi, modern, dan selaras dengan nuansa jersey/football.
+
+
+====== TUGAS INDIVIDU 6 ======
+1) Apa perbedaan antara synchronous request dan asynchronous request?
+jawab: 
+
+2) Bagaimana AJAX bekerja di Django (alur request–response)?
+jawab:
+
+3) Apa keuntungan menggunakan AJAX dibandingkan render biasa di Django?
+jawab: 
+
+4) Bagaimana cara memastikan keamanan saat menggunakan AJAX untuk fitur Login dan Register di Django?
+jawab: 
+
+5) Bagaimana AJAX mempengaruhi pengalaman pengguna (User Experience) pada website?
+jawab: 

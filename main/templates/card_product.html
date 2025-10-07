@@ -1,16 +1,16 @@
 {% load static %}
-<article class="bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+<article class="bg-white/90 backdrop-blur-sm rounded-2xl border border-emerald-100 shadow-sm hover:shadow-lg hover:scale-[1.01] transition-all duration-300 overflow-hidden">
   <!-- Thumbnail -->
   <div class="aspect-[16/9] relative overflow-hidden">
     {% if product.thumbnail %}
-      <img src="{{ product.thumbnail }}" alt="{{ product.title }}" class="w-full h-full object-cover">
+      <img src="{{ product.thumbnail }}" alt="{{ product.title }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
     {% else %}
-      <div class="w-full h-full bg-gray-200"></div>
+      <div class="w-full h-full bg-gradient-to-br from-emerald-100 to-emerald-50"></div>
     {% endif %}
 
     <!-- Category Badge -->
     <div class="absolute top-3 left-3">
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-green-600 text-white">
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-emerald-600 text-white shadow-sm">
         {{ product.get_category_display }}
       </span>
     </div>
@@ -18,13 +18,13 @@
     <!-- Status Badges -->
     <div class="absolute top-3 right-3 flex space-x-2">
       {% if product.is_featured %}
-        <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
-          Featured
+        <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-yellow-200/80 text-yellow-900 backdrop-blur-sm shadow-sm">
+          🌟 Featured
         </span>
       {% endif %}
       {% if product.is_product_hot %}
-        <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-800">
-          Hot
+        <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-200/80 text-red-800 backdrop-blur-sm shadow-sm">
+          🔥 Hot
         </span>
       {% endif %}
     </div>
@@ -32,7 +32,7 @@
 
   <!-- Content -->
   <div class="p-5">
-    <div class="flex items-center text-sm text-gray-500 mb-3">
+    <div class="flex items-center text-sm text-emerald-700/80 mb-3">
       <time datetime="{{ product.created_at|date:'c' }}">
         {{ product.created_at|date:"M j, Y" }}
       </time>
@@ -40,24 +40,24 @@
       <span>{{ product.product_views }} views</span>
     </div>
 
-    <h3 class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2 leading-tight">
-      <a href="{% url 'main:show_product' product.id %}" class="hover:text-green-600 transition-colors">
+    <h3 class="text-lg font-semibold text-emerald-900 mb-3 line-clamp-2 leading-tight">
+      <a href="{% url 'main:show_product' product.id %}" class="hover:text-emerald-600 transition-colors">
         {{ product.title }}
       </a>
     </h3>
 
-    <p class="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-4">
+    <p class="text-emerald-800/70 text-sm leading-relaxed line-clamp-3 mb-4">
       {{ product.content|truncatewords:20 }}
     </p>
 
     <!-- Action Buttons -->
     {% if user.is_authenticated and product.user == user %}
-      <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-        <a href="{% url 'main:show_product' product.id %}" class="text-green-600 hover:text-green-700 font-medium text-sm transition-colors">
+      <div class="flex items-center justify-between pt-4 border-t border-emerald-100">
+        <a href="{% url 'main:show_product' product.id %}" class="text-emerald-700 hover:text-emerald-900 font-medium text-sm transition-colors">
           Read more
         </a>
         <div class="flex space-x-2">
-          <a href="{% url 'main:edit_product' product.id %}" class="text-gray-600 hover:text-gray-700 text-sm transition-colors">
+          <a href="{% url 'main:edit_product' product.id %}" class="text-emerald-600 hover:text-emerald-800 text-sm transition-colors">
             Edit
           </a>
           <a href="{% url 'main:delete_product' product.id %}" class="text-red-600 hover:text-red-700 text-sm transition-colors">
@@ -66,8 +66,8 @@
         </div>
       </div>
     {% else %}
-      <div class="pt-4 border-t border-gray-100">
-        <a href="{% url 'main:show_product' product.id %}" class="text-green-600 hover:text-green-700 font-medium text-sm transition-colors">
+      <div class="pt-4 border-t border-emerald-100">
+        <a href="{% url 'main:show_product' product.id %}" class="text-emerald-700 hover:text-emerald-900 font-medium text-sm transition-colors">
           Read more →
         </a>
       </div>
