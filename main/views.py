@@ -2,11 +2,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from main.forms import ProductForm
 from main.models import Product
 
+from django.http import HttpResponseRedirect, JsonResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
 from django.urls import reverse
 import datetime
 
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
@@ -60,8 +63,22 @@ def show_xml(request):
 
 def show_json(request):
     product_list = Product.objects.all()
-    json_data = serializers.serialize("json", product_list)
-    return HttpResponse(json_data, content_type="application/json")
+    data = [
+        {
+            'id': str(product.id),
+            'title': product.title,
+            'content': product.content,
+            'category': product.category,
+            'thumbnail': product.thumbnail,
+            'news_views': product.product_views,
+            'created_at': product.created_at.isoformat() if product.created_at else None,
+            'is_featured': product.is_featured,
+            'user_id': product.user_id,
+        }
+        for product in product_list
+    ]
+
+    return JsonResponse(data, safe=False)
 
 def show_xml_by_id(request, product_id):
    try:
@@ -72,12 +89,23 @@ def show_xml_by_id(request, product_id):
        return HttpResponse(status=404)
 
 def show_json_by_id(request, product_id):
-   try:
-       product_item = Product.objects.get(pk=product_id)
-       json_data = serializers.serialize("json", [product_item])
-       return HttpResponse(json_data, content_type="application/json")
-   except Product.DoesNotExist:
-       return HttpResponse
+    try:
+       product = Product.objects.select_related('user').get(pk=product_id)
+       data = {
+            'id': str(product.id),
+            'title': product.title,
+            'content': product.content,
+            'category': product.category,
+            'thumbnail': product.thumbnail,
+            'news_views': product.product_views,
+            'created_at': product.created_at.isoformat() if product.created_at else None,
+            'is_featured': product.is_featured,
+            'user_id': product.user_id,
+            'user_username': product.user.username if product.user_id else None,
+        }
+       return JsonResponse(data)
+    except Product.DoesNotExist:
+        return JsonResponse({'detail': 'Not found'}, status=404)
        
 def register(request):
     form = UserCreationForm()
@@ -129,3 +157,25 @@ def delete_product(request, id):
     product = get_object_or_404(Product, pk=id)
     product.delete()
     return HttpResponseRedirect(reverse('main:show_main'))
+
+@csrf_exempt
+@require_POST
+def add_product_entry_ajax(request):
+    title = request.POST.get("title")
+    content = request.POST.get("content")
+    category = request.POST.get("category")
+    thumbnail = request.POST.get("thumbnail")
+    is_featured = request.POST.get("is_featured") == 'on'  # checkbox handling
+    user = request.user
+
+    new_product = Product(
+        title=title, 
+        content=content,
+        category=category,
+        thumbnail=thumbnail,
+        is_featured=is_featured,
+        user=user
+    )
+    new_product.save()
+
+    return HttpResponse(b"CREATED", status=201)
